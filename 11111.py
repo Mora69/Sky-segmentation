@@ -66,9 +66,9 @@ class Unet(nn.Module):
         unet_block = None
         for i in range(num_downs - 3):
             unet_block = UnetBlock(8 * nc, 8 * nc, 8 * nc, unet_block)
-        unet_block = UnetBlock(4 * nc, 8 * nc, 4 * nc, unet_block)
-        unet_block = UnetBlock(2 * nc, 4 * nc, 2 * nc, unet_block)
-        self.unet_block = UnetBlock(nc, 2 * nc, nc, unet_block)
+            unet_block = UnetBlock(4 * nc, 8 * nc, 4 * nc, unet_block)
+            unet_block = UnetBlock(2 * nc, 4 * nc, 2 * nc, unet_block)
+            self.unet_block = UnetBlock(nc, 2 * nc, nc, unet_block)
 
         self.cna3 = CNA(nc, nc)
 
@@ -136,8 +136,8 @@ val_transform = A.Compose(
         ToTensorV2(),
     ]
 )
-ds_images_path = 'G:/segmentation_full_body_mads_dataset_1192_img/segmentation_full_body_mads_dataset_1192_img/images'
-ds_masks_path = 'G:/segmentation_full_body_mads_dataset_1192_img/segmentation_full_body_mads_dataset_1192_img/masks'
+ds_images_path = 'D:/build0.4/image1/1/1/'
+ds_masks_path = 'D:/build0.4/mask1/5/1/'
 ds_train = MyDataset(ds_images_path, ds_masks_path, transform=train_transform)
 
 
@@ -179,6 +179,7 @@ epochs = 10
 for epoch in range(epochs):
     loss_val = 0
     acc_val = 0
+
     for sample in (pbar := tqdm(train_loader)):
         img, mask = sample
         img = img.to(device)
@@ -195,7 +196,7 @@ for epoch in range(epochs):
         optimizer.step()
 
     scheduler.step()
-    # pbar.set_description(f'loss: {loss_item:.5f}\tlr: {scheduler.get_last_lr}')
+    pbar.set_description(f'loss: {loss_item:.5f}\tlr: {scheduler.get_last_lr}')
     print(f'{loss_val / len(train_loader)}\t lr: {scheduler.get_last_lr()}')
     # print()
 
